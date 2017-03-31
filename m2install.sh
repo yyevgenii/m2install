@@ -234,51 +234,19 @@ function initQuietMode()
 
 function getCodeDumpFilename()
 {
-    FILENAME_CODE_DUMP=$(find . -maxdepth 1 -name '*.tbz2' -o -name '*.tar.bz2' | head -n1)
-    if [ "${FILENAME_CODE_DUMP}" == "" ]
-    then
-        FILENAME_CODE_DUMP=$(find . -maxdepth 1 -name '*.tar.gz' | grep -v 'logs.tar.gz' | head -n1)
-    fi
-    if [ ! "$FILENAME_CODE_DUMP" ]
-    then
-        FILENAME_CODE_DUMP=$(find . -maxdepth 1 -name '*.tgz' | head -n1)
-    fi
-    if [ ! "$FILENAME_CODE_DUMP" ]
-    then
-        FILENAME_CODE_DUMP=$(find . -maxdepth 1 -name '*.zip' | head -n1)
-    fi
+    FILENAME_CODE_DUMP=$(find . -maxdepth 1 -type f -regex ".*\.\(tgz\|tar\.gz\|tbz2\|tar\.bz2\|zip\)" -print -quit)
 }
 
 function getDbDumpFilename()
 {
-    FILENAME_DB_DUMP=$(find . -maxdepth 1 -name '*.sql.gz' | head -n1)
-    if [ ! "$FILENAME_DB_DUMP" ]
-    then
-        FILENAME_DB_DUMP=$(find . -maxdepth 1 -name '*_db.gz' | head -n1)
-    fi
+    FILENAME_DB_DUMP=$(find . -maxdepth 1 -type f \( -name '*.sql.gz' -o -name '*_db.gz' \) -print -quit)
 }
 
 function foundSupportBackupFiles()
 {
-    if [[ ! "$FILENAME_CODE_DUMP" ]]
-    then
-        getCodeDumpFilename
-    fi
-    if [ ! -f "$FILENAME_CODE_DUMP" ]
-    then
-        return 1;
-    fi
-
-    if [[ ! "$FILENAME_DB_DUMP" ]]
-    then
-        getDbDumpFilename
-    fi
-    if [ ! -f "$FILENAME_DB_DUMP" ]
-    then
-        return 1;
-    fi
-
-    return 0;
+    [[ -z $FILENAME_CODE_DUMP ]] && getCodeDumpFilename
+    [[ -z $FILENAME_DB_DUMP ]] && getDbDumpFilename
+    [[ -z $FILENAME_CODE_DUMP || -z $FILENAME_DB_DUMP ]] && return 1
 }
 
 function wizard()
