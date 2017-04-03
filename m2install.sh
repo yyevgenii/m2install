@@ -187,7 +187,7 @@ function extract()
 
 function mysqlQuery()
 {
-    CMD="${BIN_MYSQL} -h${DB_HOST} -u${DB_USER} --password=${DB_PASSWORD} --execute=\"${SQLQUERY}\"";
+    CMD="${BIN_MYSQL} -h${DB_HOST} -u${DB_USER} --password=${DB_PASSWORD} --execute=\"${SQLQUERY}\" 2>&1 | grep -v 'Warning: Using a password'";
     runCommand
 }
 
@@ -471,8 +471,9 @@ function restore_db()
     # Don't be confused by double gunzip in following command. Some poorly
     # configured web servers can gzip everything including gzip files
     CMD="${CMD} | gunzip -cf | sed -e 's/DEFINER[ ]*=[ ]*[^*]*\*/\*/'
-        | grep -v 'mysqldump: Couldn.t find table' | grep -v 'Warning: Using a password'
-        | ${BIN_MYSQL} -h${DB_HOST} -u${DB_USER} --password=${DB_PASSWORD} --force $DB_NAME";
+        | grep -v 'mysqldump: Couldn.t find table\|Warning: Using a password'
+        | ${BIN_MYSQL} -h${DB_HOST} -u${DB_USER} --password=${DB_PASSWORD} --force $DB_NAME" 2>&1
+        | grep -v 'Warning: Using a password'";
     runCommand
 }
 
