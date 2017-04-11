@@ -23,12 +23,14 @@ branches:
 notifications:
   email: true
 
-#install:
+install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tests/env/osx_dependencies.sh; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tests/env/linux_dependencies.sh; fi
 #  - mysql -u root -e 'CREATE USER "travis"@"localhost";'
 #  - mysql -u root -e 'CREATE DATABASE travis_magento;'
 #  - mysql -u root -e 'GRANT ALL PRIVILEGES on travis_magento.* to "travis"@"localhost";'
+  - brew update
+  - brew install bash
 
 #before_script:
 #  - curl -Ls 'https://github.com/kward/shunit2/archive/master.zip' -o 'master.zip' && unzip -q 'master.zip' && rm 'master.zip'
@@ -38,5 +40,6 @@ script:
   - sw_vers
   - system_profiler SPSoftwareDataType
   - bash --version
+  - /usr/local/bin/bash --version
   #- tests/functional/m2_installation.sh
   #- tests/functional/deploy.sh
