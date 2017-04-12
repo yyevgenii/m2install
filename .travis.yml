@@ -31,6 +31,8 @@ install:
 #  - mysql -u root -e 'GRANT ALL PRIVILEGES on travis_magento.* to "travis"@"localhost";'
   - brew update
   - brew install bash
+  - sudo bash -c 'echo /usr/local/bin/bash >> /etc/shells'
+  - sudo bash -c "chsh -s /usr/local/bin/bash"
 
 #before_script:
 #  - curl -Ls 'https://github.com/kward/shunit2/archive/master.zip' -o 'master.zip' && unzip -q 'master.zip' && rm 'master.zip'
@@ -41,5 +43,6 @@ script:
   - system_profiler SPSoftwareDataType
   - bash --version
   - /usr/local/bin/bash --version
+  - echo $BASH_VERSION
   #- tests/functional/m2_installation.sh
   #- tests/functional/deploy.sh
